@@ -2,25 +2,24 @@ import { useState, useEffect } from "react";
 import { IoIosPause } from "react-icons/io";
 import { motion } from "framer-motion";
 import { IoMdPlay } from "react-icons/io";
-import { FaBackward, FaForward, FaVolumeUp, FaVolumeMute } from "react-icons/fa";
+import { FaBackward, FaForward, FaVolumeUp, FaVolumeMute, FaHeart } from "react-icons/fa";
 import { PiDotsThreeOutlineFill } from "react-icons/pi";
-import { FaHeart } from "react-icons/fa";
 
 const CurrentPlay = ({ song, audioRef, playNext, playPrevious }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const [volume, setVolume] = useState(1);
-  const [prevVolume, setPrevVolume] = useState(1); // Stores the previous volume level
+  const [prevVolume, setPrevVolume] = useState(1);
   const [showVolumeSlider, setShowVolumeSlider] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   if (!song) return null;
 
   useEffect(() => {
     if (!song) return;
 
-    // Retrieve the recently played songs from sessionStorage
     const recentlyPlayed = JSON.parse(sessionStorage.getItem("RecentlyPlayed")) || [];
     const updatedRecentlyPlayed = recentlyPlayed.filter((s) => s.id !== song.id);
     updatedRecentlyPlayed.unshift(song);
@@ -49,7 +48,6 @@ const CurrentPlay = ({ song, audioRef, playNext, playPrevious }) => {
     const checkIfPlaying = () => {
       setIsPlaying(!audio.paused);
     };
-    
 
     audio.addEventListener("timeupdate", updateProgress);
     audio.addEventListener("play", checkIfPlaying);
@@ -68,7 +66,7 @@ const CurrentPlay = ({ song, audioRef, playNext, playPrevious }) => {
 
   useEffect(() => {
     if (audioRef.current) {
-      audioRef.current.volume = volume; // Ensure volume is set on mount
+      audioRef.current.volume = volume;
     }
   }, [audioRef, volume]);
 
@@ -89,8 +87,6 @@ const CurrentPlay = ({ song, audioRef, playNext, playPrevious }) => {
     setShowVolumeSlider(!showVolumeSlider);
   };
 
-  
-
   const handleVolumeChange = (e) => {
     const newVolume = parseFloat(e.target.value);
     setVolume(newVolume);
@@ -101,10 +97,10 @@ const CurrentPlay = ({ song, audioRef, playNext, playPrevious }) => {
 
   const toggleMute = () => {
     if (volume > 0) {
-      setPrevVolume(volume); // Save current volume before muting
+      setPrevVolume(volume);
       setVolume(0);
     } else {
-      setVolume(prevVolume); // Restore previous volume
+      setVolume(prevVolume);
     }
   };
 
@@ -115,7 +111,7 @@ const CurrentPlay = ({ song, audioRef, playNext, playPrevious }) => {
     } else {
       favSongs.push(song);
       if (navigator.vibrate) {
-        navigator.vibrate(200); // Vibrates the phone for 200ms
+        navigator.vibrate(200);
       }
     }
     localStorage.setItem("FavSong", JSON.stringify(favSongs));
@@ -155,7 +151,13 @@ const CurrentPlay = ({ song, audioRef, playNext, playPrevious }) => {
         <div className="h-1 bg-white rounded-full" style={{ width: `${progress}%` }} />
       </div>
 
-      <audio ref={audioRef} src={song.musicUrl} onEnded={playNext} />
+      <audio
+        ref={audioRef}
+        src={song.musicUrl}
+        onEnded={playNext}
+        onLoadStart={() => setIsLoading(true)}
+        onLoadedData={() => setIsLoading(false)}
+      />
 
       <div className="flex items-center justify-between gap-5 mt-4">
         <div className="relative">
@@ -168,12 +170,9 @@ const CurrentPlay = ({ song, audioRef, playNext, playPrevious }) => {
                 onClick={() => setIsFavorite(!isFavorite)}
                 className="relative cursor-pointer w-12 h-12"
                 initial={{ scale: 1 }}
-                whileTap={{ scale: 0.9 }} // Press effect
+                whileTap={{ scale: 0.9 }}
               >
-                {/* White Heart (Background) */}
                 <FaHeart className="absolute text-4xl text-white" />
-
-                {/* Red Heart (Animated Fill Effect) */}
                 <motion.div
                   initial={{ clipPath: "inset(100% 0% 0% 0%)" }}
                   animate={{ clipPath: isFavorite ? "inset(0% 0% 0% 0%)" : "inset(100% 0% 0% 0%)" }}
@@ -191,44 +190,53 @@ const CurrentPlay = ({ song, audioRef, playNext, playPrevious }) => {
           <button onClick={playPrevious} className="w-12 h-12 mr-8 flex items-center justify-center rounded-full hover:bg-[#ffffff20]">
             <FaBackward size={30} />
           </button>
-          <button onClick={togglePlayPause} className="w-14 h-14 bg-white flex items-center justify-center rounded-full hover:bg-[#ffffff20]">
-            {isPlaying ? <IoIosPause size={40} className="text-black" /> : <IoMdPlay size={24} className="text-black" />}
+
+          <button
+            onClick={togglePlayPause}
+            className="w-14 h-14 bg-white flex items-center justify-center rounded-full hover:bg-[#ffffff20]"
+          >
+            {isLoading ? (
+              <div className="w-6 h-6 border-4 border-black border-t-transparent rounded-full animate-spin"></div>
+            ) : isPlaying ? (
+              <IoIosPause size={40} className="text-black" />
+            ) : (
+              <IoMdPlay size={24} className="text-black" />
+            )}
           </button>
+
           <button onClick={playNext} className="w-12 h-12 ml-8 flex items-center justify-center rounded-full hover:bg-[#ffffff20]">
             <FaForward size={30} />
           </button>
         </div>
 
-<button onClick={toggleVolumeSlider} className="w-12 h-12 flex items-center justify-center rounded-full hover:bg-[#ffffff20]">
-  {volume > 0 ? <FaVolumeUp size={20} /> : <FaVolumeMute size={20} />}
-</button>
-{showVolumeSlider && (
-  <div className="fixed bottom-30 right-8 bg-gray-800 p-2 rounded-lg flex flex-col items-center">
-    <button 
-      onClick={() => setVolume(Math.min(1, volume + 0.1))} 
-      className="mb-2 px-2 py-1 bg-gray-700 text-white rounded"
-    >
-      +
-    </button>
+        <button onClick={toggleVolumeSlider} className="w-12 h-12 flex items-center justify-center rounded-full hover:bg-[#ffffff20]">
+          {volume > 0 ? <FaVolumeUp size={20} /> : <FaVolumeMute size={20} />}
+        </button>
 
-    <div className="relative w-8 h-32 bg-gray-600 rounded-md overflow-hidden">
-      <div 
-        className="absolute bottom-0 left-0 w-full bg-blue-500 transition-all duration-200" 
-        style={{ height: `${volume * 100}%` }} // Water fills up dynamically
-      ></div>
-    </div>
+        {showVolumeSlider && (
+          <div className="fixed bottom-30 right-8 bg-gray-800 p-2 rounded-lg flex flex-col items-center">
+            <button
+              onClick={() => setVolume(Math.min(1, volume + 0.1))}
+              className="mb-2 px-2 py-1 bg-gray-700 text-white rounded"
+            >
+              +
+            </button>
 
-    <button 
-      onClick={() => setVolume(Math.max(0, volume - 0.1))} 
-      className="mt-2 px-2 py-1 bg-gray-700 text-white rounded"
-    >
-      -
-    </button>
-  </div>
-)}
+            <div className="relative w-8 h-32 bg-gray-600 rounded-md overflow-hidden">
+              <div
+                className="absolute bottom-0 left-0 w-full bg-blue-500 transition-all duration-200"
+                style={{ height: `${volume * 100}%` }}
+              ></div>
+            </div>
 
-
-
+            <button
+              onClick={() => setVolume(Math.max(0, volume - 0.1))}
+              className="mt-2 px-2 py-1 bg-gray-700 text-white rounded"
+            >
+              -
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

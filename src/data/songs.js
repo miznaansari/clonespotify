@@ -76,7 +76,7 @@ const songs = [
       musicUrl: "https://pagalfree.com/musics/128-Agar%20Tum%20Saath%20Ho%20-%20Tamasha%20128%20Kbps.mp3",
       duration: "5:30",
       artistName: "Arijit Singh, Alka Yagnik",
-    },
+    },  
     {
         id: 13,
       title: "Channa Mereya",

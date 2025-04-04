@@ -22,6 +22,7 @@ const Main = () => {
   useEffect(() => {
     setShowCurrentPlay(false); // Hide CurrentPlay when the route changes
   }, [location.pathname]);
+  
   return (
     <>
 
