@@ -161,14 +161,25 @@ const CurrentPlay = ({ song, audioRef, playNext, playPrevious }) => {
           </button>
           {showMenu && (
             <button onClick={toggleFavorite} className="absolute top-[-90px] left-0 p-2 rounded-sm">
-              <motion.span
-                initial={{ y: isFavorite ? 20 : -20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ y: isFavorite ? -20 : 20, opacity: 0 }}
-                transition={{ duration: 0.3 }}
+              <motion.div
+                onClick={() => setIsFavorite(!isFavorite)}
+                className="relative cursor-pointer w-12 h-12"
+                initial={{ scale: 1 }}
+                whileTap={{ scale: 0.9 }} // Press effect
               >
-                <FaHeart className={`text-4xl ${isFavorite ? "text-red-500" : "text-white"}`} />
-              </motion.span>
+                {/* White Heart (Background) */}
+                <FaHeart className="absolute text-4xl text-white" />
+
+                {/* Red Heart (Animated Fill Effect) */}
+                <motion.div
+                  initial={{ clipPath: "inset(100% 0% 0% 0%)" }}
+                  animate={{ clipPath: isFavorite ? "inset(0% 0% 0% 0%)" : "inset(100% 0% 0% 0%)" }}
+                  transition={{ duration: 0.6, ease: "easeInOut" }}
+                  className="absolute text-red-500"
+                >
+                  <FaHeart className="text-4xl" />
+                </motion.div>
+              </motion.div>
             </button>
           )}
         </div>
