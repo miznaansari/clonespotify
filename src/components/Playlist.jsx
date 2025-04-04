@@ -5,7 +5,7 @@ import songs from "../data/songs"; // Import your song data
 import { motion } from "framer-motion"; // Import framer-motion
 import { useLocation } from "react-router"; // To track location changes
 import { FaSpotify } from "react-icons/fa";
-
+import { FaSearch } from "react-icons/fa";
 const Playlist = ({ setDominantColor, showCurrentPlay, setShowCurrentPlay }) => {
     const [search, setSearch] = useState("");
     const [currentSongId, setCurrentSongId] = useState(songs[0]?.id || null); // Set the first song's ID by default
@@ -86,13 +86,16 @@ const Playlist = ({ setDominantColor, showCurrentPlay, setShowCurrentPlay }) => 
                         <h1 className="text-2xl text-white mt-8 font-bold mb-5">For You</h1>
                         </div>
                         {/* Search Bar */}
-                        <input
-                            type="text"
-                            placeholder="Search by Title..."
-                            value={search}
-                            onChange={(e) => setSearch(e.target.value)}
-                            className="w-full p-2 mb-4 rounded-sm border text-white focus:outline-none"
-                        />
+                        <div className="relative">
+                    <input
+                        type="text"
+                        placeholder="Search by Title..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        className="w-full p-2 mb-4 rounded-sm border text-white focus:outline-none"
+                    />
+                    <FaSearch className="text-gray-500 absolute top-3 text-xl right-5" />
+                    </div>
                         <div className="flex flex-2 gap-5 scrollbar-hide max-h-[75dvh] overflow-y-auto p-1 justify-around text-white transition-all">
                             <div className="w-full">
                                 <div className="rounded-sm scrollbar-hide overflow-y-auto">
@@ -151,6 +154,7 @@ const Playlist = ({ setDominantColor, showCurrentPlay, setShowCurrentPlay }) => 
                 <div className="lg:w-1/3 md:w-2/4 mx-5 lg:ml-5">
                     <h1 className="text-2xl text-white mt-8 font-bold mb-5">For You</h1>
                     {/* Search Bar */}
+                    <div className="relative">
                     <input
                         type="text"
                         placeholder="Search by Title..."
@@ -158,6 +162,8 @@ const Playlist = ({ setDominantColor, showCurrentPlay, setShowCurrentPlay }) => 
                         onChange={(e) => setSearch(e.target.value)}
                         className="w-full p-2 mb-4 rounded-sm border text-white focus:outline-none"
                     />
+                    <FaSearch className="text-gray-500 absolute top-3 text-xl right-5" />
+                    </div>
                     <div className="flex gap-5 scrollbar-hide max-h-[75dvh] overflow-y-auto p-1 justify-around text-white transition-all">
                         <div className="w-full">
                             <div className="rounded-sm scrollbar-hide overflow-y-auto">

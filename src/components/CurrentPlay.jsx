@@ -5,10 +5,12 @@ import { IoMdPlay } from "react-icons/io";
 import { FaBackward, FaForward, FaVolumeUp, FaVolumeMute } from "react-icons/fa";
 import { PiDotsThreeOutlineFill } from "react-icons/pi";
 import { FaHeart } from "react-icons/fa";
+
 const CurrentPlay = ({ song, audioRef, playNext, playPrevious }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const [volume, setVolume] = useState(1);
+  const [prevVolume, setPrevVolume] = useState(1); // Stores the previous volume level
   const [showVolumeSlider, setShowVolumeSlider] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
@@ -20,30 +22,20 @@ const CurrentPlay = ({ song, audioRef, playNext, playPrevious }) => {
 
     // Retrieve the recently played songs from sessionStorage
     const recentlyPlayed = JSON.parse(sessionStorage.getItem("RecentlyPlayed")) || [];
-
-    // Remove the song from the list if it already exists (so we can add it to the top)
     const updatedRecentlyPlayed = recentlyPlayed.filter((s) => s.id !== song.id);
-
-    // Add the current song to the top of the list
     updatedRecentlyPlayed.unshift(song);
-
-    // Save the updated list back to sessionStorage
     sessionStorage.setItem("RecentlyPlayed", JSON.stringify(updatedRecentlyPlayed));
 
-    // Track the most played song in localStorage (increment the play count)
     let topPlayed = JSON.parse(localStorage.getItem("TopPlayed")) || [];
     const existingSongIndex = topPlayed.findIndex((s) => s.id === song.id);
     if (existingSongIndex >= 0) {
-      topPlayed[existingSongIndex].playCount += 1; // Increment play count
+      topPlayed[existingSongIndex].playCount += 1;
     } else {
-      song.playCount = 1; // Initialize play count
+      song.playCount = 1;
       topPlayed.push(song);
     }
-
-    // Sort by play count to have the most played at the start
     topPlayed = topPlayed.sort((a, b) => b.playCount - a.playCount);
     localStorage.setItem("TopPlayed", JSON.stringify(topPlayed));
-
   }, [song]);
 
   useEffect(() => {
@@ -54,17 +46,11 @@ const CurrentPlay = ({ song, audioRef, playNext, playPrevious }) => {
       setProgress((audio.currentTime / audio.duration) * 100);
     };
 
-    audio.addEventListener("timeupdate", updateProgress);
-
-    // Sync isPlaying state with the actual audio state
     const checkIfPlaying = () => {
-      if (audio.paused) {
-        setIsPlaying(false);
-      } else {
-        setIsPlaying(true);
-      }
+      setIsPlaying(!audio.paused);
     };
 
+    audio.addEventListener("timeupdate", updateProgress);
     audio.addEventListener("play", checkIfPlaying);
     audio.addEventListener("pause", checkIfPlaying);
 
@@ -76,9 +62,14 @@ const CurrentPlay = ({ song, audioRef, playNext, playPrevious }) => {
   }, [audioRef]);
 
   useEffect(() => {
-    // If a new song is selected, reset the progress (but don't play yet)
     setProgress(0);
   }, [song]);
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = volume; // Ensure volume is set on mount
+    }
+  }, [audioRef, volume]);
 
   const togglePlayPause = () => {
     const audio = audioRef.current;
@@ -98,10 +89,19 @@ const CurrentPlay = ({ song, audioRef, playNext, playPrevious }) => {
   };
 
   const handleVolumeChange = (e) => {
-    const newVolume = e.target.value;
+    const newVolume = parseFloat(e.target.value);
     setVolume(newVolume);
     if (audioRef.current) {
       audioRef.current.volume = newVolume;
+    }
+  };
+
+  const toggleMute = () => {
+    if (volume > 0) {
+      setPrevVolume(volume); // Save current volume before muting
+      setVolume(0);
+    } else {
+      setVolume(prevVolume); // Restore previous volume
     }
   };
 
@@ -111,20 +111,20 @@ const CurrentPlay = ({ song, audioRef, playNext, playPrevious }) => {
       favSongs = favSongs.filter((fav) => fav.musicUrl !== song.musicUrl);
     } else {
       favSongs.push(song);
+      if (navigator.vibrate) {
+        navigator.vibrate(200); // Vibrates the phone for 200ms
+      }
     }
     localStorage.setItem("FavSong", JSON.stringify(favSongs));
     setIsFavorite(!isFavorite);
   };
+
   useEffect(() => {
     if (!song) return;
-  
-    // Check if the song is already in favorites
     const favSongs = JSON.parse(localStorage.getItem("FavSong")) || [];
-    const isFav = favSongs.some((fav) => fav.musicUrl === song.musicUrl);
-    setIsFavorite(isFav);
+    setIsFavorite(favSongs.some((fav) => fav.musicUrl === song.musicUrl));
   }, [song]);
 
-  // Handle progress bar click
   const handleProgressClick = (e) => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -134,28 +134,18 @@ const CurrentPlay = ({ song, audioRef, playNext, playPrevious }) => {
     const clickPosition = e.clientX - progressBar.getBoundingClientRect().left;
     const newProgress = (clickPosition / progressWidth) * 100;
 
-    setProgress(newProgress); // Update progress state
-    audio.currentTime = (newProgress / 100) * audio.duration; // Seek to the new time
-  };
-
-  // Handle click to play the song from Favorites or Recently Played
-  const handleSongClick = () => {
-    const audio = audioRef.current;
-    if (audio) {
-      audio.play(); // Play the selected song
-      setIsPlaying(true); // Update play state
-    }
+    setProgress(newProgress);
+    audio.currentTime = (newProgress / 100) * audio.duration;
   };
 
   return (
-    <div className=" p-2 pb-0 mt-25 md:pb-0 lg:p-5 rounded-sm mx-2 lg:mx-10 text-white mt-16 md:mt-0  md:block relative">
+    <div className="p-2 pb-0 mt-20 md:pb-0 lg:p-5 rounded-sm mx-2 lg:mx-10 text-white mt-16 md:mt-0 md:block relative">
       <h2 className="text-xl font-bold mt-3 mb-2">{song.title}</h2>
       <p className="text-gray-400 mb-2 md:mb-8">{song.artistName}</p>
       <img
         src={song.thumbnail}
         alt={song.title}
-        className="aspect-square object-fit h-88  rounded-lg mx-auto cursor-pointer"
-        onClick={handleSongClick} // Add click event to play the song
+        className="aspect-square object-fit h-88 rounded-lg mx-auto cursor-pointer"
       />
 
       <div className="w-full h-1 bg-gray-600 rounded-full mt-3" onClick={handleProgressClick}>
@@ -170,42 +160,34 @@ const CurrentPlay = ({ song, audioRef, playNext, playPrevious }) => {
             <PiDotsThreeOutlineFill size={24} />
           </button>
           {showMenu && (
-            <button onClick={toggleFavorite} className="absolute  top-[-90px] left-0 p-2 rounded-sm">
-              <span >
-                {isFavorite ? (<><span><FaHeart className="text-4xl text-red-500" /></span></>): (<><span><FaHeart className=" text-4xl  text-white" /></span></>)}
-              </span>
+            <button onClick={toggleFavorite} className="absolute top-[-90px] left-0 p-2 rounded-sm">
+              <motion.span
+                initial={{ y: isFavorite ? 20 : -20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: isFavorite ? -20 : 20, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <FaHeart className={`text-4xl ${isFavorite ? "text-red-500" : "text-white"}`} />
+              </motion.span>
             </button>
           )}
         </div>
 
         <div className="flex items-center">
-          <button onClick={playPrevious} className="w-12 h-12 flex items-center justify-center rounded-full hover:bg-[#ffffff20]">
-            <FaBackward size={20} />
+          <button onClick={playPrevious} className="w-12 h-12 mr-8 flex items-center justify-center rounded-full hover:bg-[#ffffff20]">
+            <FaBackward size={30} />
           </button>
-          <button onClick={togglePlayPause} className="w-12 h-12 bg-white flex items-center justify-center rounded-full hover:bg-[#ffffff20]">
-            {isPlaying ? <IoIosPause size={24} className="text-black " /> : <IoMdPlay className="text-black" size={24} />}
+          <button onClick={togglePlayPause} className="w-14 h-14 bg-white flex items-center justify-center rounded-full hover:bg-[#ffffff20]">
+            {isPlaying ? <IoIosPause size={40} className="text-black" /> : <IoMdPlay size={24} className="text-black" />}
           </button>
-          <button onClick={playNext} className="w-12 h-12 flex items-center justify-center rounded-full hover:bg-[#ffffff20]">
-            <FaForward size={20} />
+          <button onClick={playNext} className="w-12 h-12 ml-8 flex items-center justify-center rounded-full hover:bg-[#ffffff20]">
+            <FaForward size={30} />
           </button>
         </div>
 
-        <div className="relative">
-          <button onClick={toggleVolumeSlider} className="w-12 h-12 flex items-center justify-center rounded-full hover:bg-[#ffffff20]">
-            {volume > 0 ? <FaVolumeUp size={20} /> : <FaVolumeMute size={20} />}
-          </button>
-          {showVolumeSlider && (
-            <input
-              type="range"
-              min="0"
-              max="1"
-              step="0.1"
-              value={volume}
-              onChange={handleVolumeChange}
-              className="absolute right-0 top-14 w-24 h-2 bg-gray-500 rounded-lg cursor-pointer"
-            />
-          )}
-        </div>
+        <button onClick={toggleMute} className="w-12 h-12 flex items-center justify-center rounded-full hover:bg-[#ffffff20]">
+          {volume > 0 ? <FaVolumeUp size={20} /> : <FaVolumeMute size={20} />}
+        </button>
       </div>
     </div>
   );

@@ -4,7 +4,7 @@ import ColorThief from "colorthief";
 import { motion } from "framer-motion"; // Import framer-motion
 import { useLocation } from "react-router"; // To track location changes
 import { MdOutlineFavorite } from "react-icons/md";
-import { FaSpotify } from "react-icons/fa";
+import { FaSearch, FaSpotify } from "react-icons/fa";
 const Favorites = ({ setDominantColor, showCurrentPlay, setShowCurrentPlay }) => {
     const [songs, setsong] = useState(
         JSON.parse(localStorage.getItem("FavSong")) || []
@@ -90,14 +90,16 @@ const Favorites = ({ setDominantColor, showCurrentPlay, setShowCurrentPlay }) =>
                         <h1 className="text-2xl text-white mt-8 font-bold mb-5">Favorites</h1> <MdOutlineFavorite className="text-2xl  mt-8 ml-1 font-bold mb-5 text-red-500" />
                         </div>
                         </div>
-                        {/* Search Bar */}
-                        <input
-                            type="text"
-                            placeholder="Search by Title..."
-                            value={search}
-                            onChange={(e) => setSearch(e.target.value)}
-                            className="w-full p-2 mb-4 rounded-sm border text-white focus:outline-none"
-                        />
+                        <div className="relative">
+                                           <input
+                                               type="text"
+                                               placeholder="Search by Title..."
+                                               value={search}
+                                               onChange={(e) => setSearch(e.target.value)}
+                                               className="w-full p-2 mb-4 rounded-sm border text-white focus:outline-none"
+                                           />
+                                           <FaSearch className="text-gray-500 absolute top-3 text-xl right-5" />
+                                           </div>
                         <div className="flex flex-2 gap-5 scrollbar-hide max-h-[75dvh] overflow-y-auto p-1 justify-around text-white transition-all">
                             <div className="w-full">
                                 <div className="rounded-sm scrollbar-hide overflow-y-auto">
@@ -157,6 +159,7 @@ const Favorites = ({ setDominantColor, showCurrentPlay, setShowCurrentPlay }) =>
                 <div className="flex items-center mt-8 gap-2 mb-5" >
                     <h1 className="text-2xl text-white  font-bold">Favorites </h1><MdOutlineFavorite className="text-2xl text-red-500" /></div>
                     {/* Search Bar */}
+                    <div className="relative">
                     <input
                         type="text"
                         placeholder="Search by Title..."
@@ -164,6 +167,8 @@ const Favorites = ({ setDominantColor, showCurrentPlay, setShowCurrentPlay }) =>
                         onChange={(e) => setSearch(e.target.value)}
                         className="w-full p-2 mb-4 rounded-sm border text-white focus:outline-none"
                     />
+                    <FaSearch className="text-gray-500 absolute top-3 text-xl right-5" />
+                    </div>
                     <div className="flex gap-5 scrollbar-hide max-h-[75dvh] overflow-y-auto p-1 justify-around text-white transition-all">
                         <div className="w-full">
                             <div className="rounded-sm scrollbar-hide overflow-y-auto">

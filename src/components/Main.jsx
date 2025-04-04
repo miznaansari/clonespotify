@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion"; // Import AnimatePresence
-import { Routes, Route } from "react-router"; // Fix import path
+import { Routes, Route, useLocation } from "react-router"; // Fix import path
 import Playlist from "./Playlist";
 import Favorites from "./Favorites";
 import RecentlyPlayed from "./RecentlyPlayed";
@@ -17,7 +17,11 @@ const Main = () => {
   const toggleNavbar = () => setIsNavbarVisible(!isNavbarVisible);
   const closeNavbar = () => setIsNavbarVisible(false);
   const toggleCurrentPlay = () => setShowCurrentPlay(!showCurrentPlay);
+  const location = useLocation(); // Track route changes
 
+  useEffect(() => {
+    setShowCurrentPlay(false); // Hide CurrentPlay when the route changes
+  }, [location.pathname]);
   return (
     <>
 
@@ -116,7 +120,10 @@ const Main = () => {
             }
           />
         </Routes>
+
       </motion.div>
+     <div className="fixed bottom-5 left-10 hidden lg:block"> <img src="https://s3-alpha-sig.figma.com/img/4b1c/9272/23674d7d0fc7e5938c32787f13738353?Expires=1744588800&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=mc1whtZ6W7czkdFWDVB1JAlBUmwrC3GffOZXhrkfPhnfMMrwE28nyBB7E4F-JIFXY5GYIYTlY1w5ZBN6C7IiYzEu6HhuojfwfH7XwamRlk-GApiKC1eiPpsUiJwPvSdEhW3bmmFYcqq1hTDUVxHMYWZzW4RBwzd6Ri3IOGtALknSwUr4n~k~VPUZ5b5dXgN4786HDmS9L83PfyZCs-fcKuEFxAWudE45iqtVD5cRum92tW71oXha~Nnfrx1~UGAFU~pMF0lZH0QpNSjK4RHkQyt937FDGAd1M1WJ55dowFzcq5Cj5OFCL-4zG~LNsp~pFx3GPktr3oABs404poW2Fg__" 
+      alt="" className=" bg-[#151515] w-[50px] object-cover h-[50px] rounded-full " /></div>
     </>
   );
 };
