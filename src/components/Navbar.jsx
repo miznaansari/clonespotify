@@ -2,7 +2,6 @@ import React from "react";
 import { FaSpotify } from "react-icons/fa";
 import { NavLink } from "react-router"; // Make sure to import from 'react-router-dom' for React Router v6
 import imgSpotify from "./spotify.png";
-
 const Navbar = ({ closeNavbar }) => {
   return (
     <nav className="w-60 flex-col p-4 text-white">

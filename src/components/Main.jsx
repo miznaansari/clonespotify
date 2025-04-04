@@ -5,6 +5,8 @@ import Playlist from "./Playlist";
 import Favorites from "./Favorites";
 import RecentlyPlayed from "./RecentlyPlayed";
 import TopTracks from "./TopTracks";
+import { RxCross2 } from "react-icons/rx";
+
 import Navbar from "./Navbar";
 import { IoMdMenu } from "react-icons/io";
 import { FaList, FaSpotify } from "react-icons/fa";
@@ -43,12 +45,17 @@ const Main = () => {
           <Navbar closeNavbar={closeNavbar} />
         </div>
         
+        {isNavbarVisible?(<> {/* Mobile Menu Icon */}
+       <RxCross2 className="text-3xl mt-8 m-3 block lg:hidden text-white fixed top-0 right-0 z-50"
+          onClick={toggleNavbar}/></>):(<> <IoMdMenu
+            className="text-3xl mt-8 m-3 block lg:hidden text-white fixed top-0 right-0 z-50"
+            onClick={toggleNavbar}
+          /></>)}
 
-        {/* Mobile Menu Icon */}
-        <IoMdMenu
-          className="text-3xl mt-8 m-3 block lg:hidden text-white fixed top-0 right-0 z-50"
-          onClick={toggleNavbar}
-        />
+       
+
+
+       
 
         {/* Mobile Navbar with AnimatePresence */}
         <AnimatePresence>
