@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import CurrentPlay from "./CurrentPlay";
 import ColorThief from "colorthief";
-import { motion } from "framer-motion"; // Import framer-motion
+import { AnimatePresence, motion } from "framer-motion"; // Import framer-motion
 import { useLocation } from "react-router"; // To track location changes
 import { MdOutlineFavorite } from "react-icons/md";
 import { FaSearch, FaSpotify } from "react-icons/fa";
@@ -172,9 +172,10 @@ const RecentlyPlayed = ({ setDominantColor, showCurrentPlay, setShowCurrentPlay 
                     <div className="flex gap-5 scrollbar-hide max-h-[75dvh] overflow-y-auto p-1 justify-around text-white transition-all">
                         <div className="w-full">
                             <div className="rounded-sm scrollbar-hide overflow-y-auto">
+                            <AnimatePresence>
                                 {filteredSongs.length > 0 ? (
-                                    <ul className="space-y-4">
-                                        {filteredSongs.map((song) => (
+                                        <ul className="space-y-4">
+                                        {filteredSongs.map((song, index) => (
                                             <motion.li
                                                 key={song.id}
                                                 className={`flex items-center space-x-4 p-4 rounded-sm cursor-pointer hover:bg-[#ffffff20] ${currentSongId === song.id ? "bg-[#ffffff20]" : ""}`}
@@ -182,9 +183,9 @@ const RecentlyPlayed = ({ setDominantColor, showCurrentPlay, setShowCurrentPlay 
                                                     setCurrentSongId(song.id); // Select the song
                                                     setHasUserInteracted(true); // Mark as interacted
                                                 }}
-                                                initial={{ opacity: 0 }}
-                                                animate={{ opacity: 1 }}
-                                                transition={{ duration: 0.3 }}
+                                                initial={{ opacity: 0, x: 50 }}
+                                                animate={{ opacity: 1, x: 0 }}
+                                                transition={{ duration: 0.4, delay: index * 0.1 }}
                                             >
                                                 <img
                                                     src={song.thumbnail}
@@ -201,9 +202,12 @@ const RecentlyPlayed = ({ setDominantColor, showCurrentPlay, setShowCurrentPlay 
                                             </motion.li>
                                         ))}
                                     </ul>
-                                ) : (
-                                    <p className="text-center text-gray-400">No results found</p>
-                                )}
+                                    
+                                    ) : (
+                                        <p className="text-center text-gray-400">No results found</p>
+                                    )}
+
+                                    </AnimatePresence>
                             </div>
                         </div>
                     </div>

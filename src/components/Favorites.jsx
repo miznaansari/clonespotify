@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import CurrentPlay from "./CurrentPlay";
 import ColorThief from "colorthief";
-import { motion } from "framer-motion"; // Import framer-motion
+import { AnimatePresence, motion } from "framer-motion"; // Import framer-motion
 import { useLocation } from "react-router"; // To track location changes
 import { MdOutlineFavorite } from "react-icons/md";
 import { FaSearch, FaSpotify } from "react-icons/fa";
@@ -14,7 +14,7 @@ const Favorites = ({ setDominantColor, showCurrentPlay, setShowCurrentPlay }) =>
     const audioRef = useRef(null);
     const [hasUserInteracted, setHasUserInteracted] = useState(false); // Track user interaction
     const location = useLocation(); // Get current location
-   
+
 
     // Filter songs based on search query
     const filteredSongs = songs.filter((song) =>
@@ -85,57 +85,61 @@ const Favorites = ({ setDominantColor, showCurrentPlay, setShowCurrentPlay }) =>
                 {!showCurrentPlay && (
                     <div className="w-full ">
                         <div className="flex items-center">
-                                                                         <FaSpotify className="text-2xl mr-3 text-white mt-8 font-bold mb-5" />
-                        <div className="flex items-center">
-                        <h1 className="text-2xl text-white mt-8 font-bold mb-5">Favorites</h1> <MdOutlineFavorite className="text-2xl  mt-8 ml-1 font-bold mb-5 text-red-500" />
-                        </div>
+                            <FaSpotify className="text-2xl mr-3 text-white mt-8 font-bold mb-5" />
+                            <div className="flex items-center">
+                                <h1 className="text-2xl text-white mt-8 font-bold mb-5">Favorites</h1> <MdOutlineFavorite className="text-2xl  mt-8 ml-1 font-bold mb-5 text-red-500" />
+                            </div>
                         </div>
                         <div className="relative">
-                                           <input
-                                               type="text"
-                                               placeholder="Search by Title..."
-                                               value={search}
-                                               onChange={(e) => setSearch(e.target.value)}
-                                               className="w-full p-2 mb-4 rounded-sm border text-white focus:outline-none"
-                                           />
-                                           <FaSearch className="text-gray-500 absolute top-3 text-xl right-5" />
-                                           </div>
-                        <div className="flex flex-2 gap-5 scrollbar-hide max-h-[75dvh] overflow-y-auto p-1 justify-around text-white transition-all">
+                            <input
+                                type="text"
+                                placeholder="Search by Title..."
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                                className="w-full p-2 mb-4 rounded-sm border text-white focus:outline-none"
+                            />
+                            <FaSearch className="text-gray-500 absolute top-3 text-xl right-5" />
+                        </div>
+                        <div className="flex flex-2 gap-5 scrollbar-hide max-h-[70vh] overflow-y-auto p-1 justify-around text-white transition-all">
                             <div className="w-full">
                                 <div className="rounded-sm scrollbar-hide overflow-y-auto">
-                                    {filteredSongs.length > 0 ? (
+                                <AnimatePresence>
+                                {filteredSongs.length > 0 ? (
                                         <ul className="space-y-4">
-                                            {filteredSongs.map((song) => (
-                                                <motion.li
-                                                    key={song.id}
-                                                    className={`flex items-center space-x-4 p-4 rounded-sm cursor-pointer hover:bg-[#ffffff20] ${currentSongId === song.id ? "bg-[#ffffff20]" : ""}`}
-                                                    onClick={() => {
-                                                        setCurrentSongId(song.id); // Select the song
-                                                        setHasUserInteracted(true); // Mark as interacted
-                                                        toggleCurrentPlay(); // Toggle the current play view
-                                                    }}
-                                                    initial={{ opacity: 0 }}
-                                                    animate={{ opacity: 1 }}
-                                                    transition={{ duration: 0.3 }}
-                                                >
-                                                    <img
-                                                        src={song.thumbnail}
-                                                        alt={song.title}
-                                                        className="w-12 h-12 rounded-full"
-                                                    />
-                                                    <div className="flex items-center justify-between w-full">
-                                                        <div>
-                                                            <h2 className="text-sm font-semibold">{song.title}</h2>
-                                                            <p className="text-xs text-gray-400">{song.artistName}</p>
-                                                        </div>
-                                                        <p className="text-xs text-gray-400">{song.duration}</p>
+                                        {filteredSongs.map((song, index) => (
+                                            <motion.li
+                                                key={song.id}
+                                                className={`flex items-center space-x-4 p-4 rounded-sm cursor-pointer hover:bg-[#ffffff20] ${currentSongId === song.id ? "bg-[#ffffff20]" : ""}`}
+                                                onClick={() => {
+                                                    setCurrentSongId(song.id); // Select the song
+                                                    setHasUserInteracted(true); // Mark as interacted
+                                                    toggleCurrentPlay?.(); // Toggle current play if applicable
+                                                }}
+                                                initial={{ opacity: 0, x: 50 }}
+                                                animate={{ opacity: 1, x: 0 }}
+                                                transition={{ duration: 0.4, delay: index * 0.1 }}
+                                            >
+                                                <img
+                                                    src={song.thumbnail}
+                                                    alt={song.title}
+                                                    className="w-12 h-12 rounded-full"
+                                                />
+                                                <div className="flex items-center justify-between w-full">
+                                                    <div>
+                                                        <h2 className="text-sm font-semibold">{song.title}</h2>
+                                                        <p className="text-xs text-gray-400">{song.artistName}</p>
                                                     </div>
-                                                </motion.li>
-                                            ))}
-                                        </ul>
+                                                    <p className="text-xs text-gray-400">{song.duration}</p>
+                                                </div>
+                                            </motion.li>
+                                        ))}
+                                    </ul>
+                                    
                                     ) : (
                                         <p className="text-center text-gray-400">No results found</p>
                                     )}
+
+                                    </AnimatePresence>
                                 </div>
                             </div>
                         </div>
@@ -156,25 +160,25 @@ const Favorites = ({ setDominantColor, showCurrentPlay, setShowCurrentPlay }) =>
             {/* For Medium and Large Screens: Show both Playlist and Current Play side by side */}
             <div className="hidden md:flex w-full justify-around gap-10 px-2">
                 <div className="lg:w-1/3 md:w-2/4 mx-5 lg:ml-5">
-                <div className="flex items-center mt-8 gap-2 mb-5" >
-                    <h1 className="text-2xl text-white  font-bold">Favorites </h1><MdOutlineFavorite className="text-2xl text-red-500" /></div>
+                    <div className="flex items-center mt-8 gap-2 mb-5" >
+                        <h1 className="text-2xl text-white  font-bold">Favorites </h1><MdOutlineFavorite className="text-2xl text-red-500" /></div>
                     {/* Search Bar */}
                     <div className="relative">
-                    <input
-                        type="text"
-                        placeholder="Search by Title..."
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                        className="w-full p-2 mb-4 rounded-sm border text-white focus:outline-none"
-                    />
-                    <FaSearch className="text-gray-500 absolute top-3 text-xl right-5" />
+                        <input
+                            type="text"
+                            placeholder="Search by Title..."
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                            className="w-full p-2 mb-4 rounded-sm border text-white focus:outline-none"
+                        />
+                        <FaSearch className="text-gray-500 absolute top-3 text-xl right-5" />
                     </div>
                     <div className="flex gap-5 scrollbar-hide max-h-[75dvh] overflow-y-auto p-1 justify-around text-white transition-all">
                         <div className="w-full">
                             <div className="rounded-sm scrollbar-hide overflow-y-auto">
                                 {filteredSongs.length > 0 ? (
                                     <ul className="space-y-4">
-                                        {filteredSongs.map((song) => (
+                                        {filteredSongs.map((song, index) => (
                                             <motion.li
                                                 key={song.id}
                                                 className={`flex items-center space-x-4 p-4 rounded-sm cursor-pointer hover:bg-[#ffffff20] ${currentSongId === song.id ? "bg-[#ffffff20]" : ""}`}
@@ -182,9 +186,9 @@ const Favorites = ({ setDominantColor, showCurrentPlay, setShowCurrentPlay }) =>
                                                     setCurrentSongId(song.id); // Select the song
                                                     setHasUserInteracted(true); // Mark as interacted
                                                 }}
-                                                initial={{ opacity: 0 }}
-                                                animate={{ opacity: 1 }}
-                                                transition={{ duration: 0.3 }}
+                                                initial={{ opacity: 0, x: 50 }}
+                                                animate={{ opacity: 1, x: 0 }}
+                                                transition={{ duration: 0.4, delay: index * 0.1 }}
                                             >
                                                 <img
                                                     src={song.thumbnail}
@@ -201,6 +205,7 @@ const Favorites = ({ setDominantColor, showCurrentPlay, setShowCurrentPlay }) =>
                                             </motion.li>
                                         ))}
                                     </ul>
+
                                 ) : (
                                     <p className="text-center text-gray-400">No results found</p>
                                 )}

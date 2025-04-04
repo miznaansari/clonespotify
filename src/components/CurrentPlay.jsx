@@ -49,6 +49,7 @@ const CurrentPlay = ({ song, audioRef, playNext, playPrevious }) => {
     const checkIfPlaying = () => {
       setIsPlaying(!audio.paused);
     };
+    
 
     audio.addEventListener("timeupdate", updateProgress);
     audio.addEventListener("play", checkIfPlaying);
@@ -87,6 +88,8 @@ const CurrentPlay = ({ song, audioRef, playNext, playPrevious }) => {
   const toggleVolumeSlider = () => {
     setShowVolumeSlider(!showVolumeSlider);
   };
+
+  
 
   const handleVolumeChange = (e) => {
     const newVolume = parseFloat(e.target.value);
