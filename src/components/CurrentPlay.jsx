@@ -199,9 +199,36 @@ const CurrentPlay = ({ song, audioRef, playNext, playPrevious }) => {
           </button>
         </div>
 
-        <button onClick={toggleMute} className="w-12 h-12 flex items-center justify-center rounded-full hover:bg-[#ffffff20]">
-          {volume > 0 ? <FaVolumeUp size={20} /> : <FaVolumeMute size={20} />}
-        </button>
+<button onClick={toggleVolumeSlider} className="w-12 h-12 flex items-center justify-center rounded-full hover:bg-[#ffffff20]">
+  {volume > 0 ? <FaVolumeUp size={20} /> : <FaVolumeMute size={20} />}
+</button>
+{showVolumeSlider && (
+  <div className="fixed bottom-30 right-8 bg-gray-800 p-2 rounded-lg flex flex-col items-center">
+    <button 
+      onClick={() => setVolume(Math.min(1, volume + 0.1))} 
+      className="mb-2 px-2 py-1 bg-gray-700 text-white rounded"
+    >
+      +
+    </button>
+
+    <div className="relative w-8 h-32 bg-gray-600 rounded-md overflow-hidden">
+      <div 
+        className="absolute bottom-0 left-0 w-full bg-blue-500 transition-all duration-200" 
+        style={{ height: `${volume * 100}%` }} // Water fills up dynamically
+      ></div>
+    </div>
+
+    <button 
+      onClick={() => setVolume(Math.max(0, volume - 0.1))} 
+      className="mt-2 px-2 py-1 bg-gray-700 text-white rounded"
+    >
+      -
+    </button>
+  </div>
+)}
+
+
+
       </div>
     </div>
   );

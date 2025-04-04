@@ -18,7 +18,7 @@ const songs = [
     {
         id: 3,
         title: "Lover",
-        thumbnail: "https://a10.gaanacdn.com/gn_img/albums/z8k3y13rxo/k3ydngLJKr/size_l_1629086662.webp",
+        thumbnail: "https://images.unsplash.com/photo-1557682250-33bd709cbe85?q=80&w=1429&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
         musicUrl: "https://cdnsongs.com/music/data/Single_Track/202108/Lover/128/Lover_1.mp3",
         duration: "3:40",
         artistName: "Diljit Dosanjh",
@@ -62,7 +62,7 @@ const songs = [
     {
         id: 10,
       title: "Tera Yaar Hoon Main",
-      thumbnail: "https://pagalfree.com/images/128Tera%20Yaar%20Hoon%20Main%20-%20Sonu%20Ke%20Titu%20Ki%20Sweety%20128%20Kbps.jpg",
+      thumbnail: "https://i2.sndcdn.com/artworks-000359813853-wq37oe-t500x500.jpg",
       musicUrl: "https://pagalfree.com/musics/128-Tera%20Yaar%20Hoon%20Main%20-%20Sonu%20Ke%20Titu%20Ki%20Sweety%20128%20Kbps.mp3",
       duration: "4:20",
       artistName: "Arijit Singh",
@@ -72,7 +72,7 @@ const songs = [
     {
         id: 12,
       title: "Agar Tum Saath Ho",
-      thumbnail: "https://pagalfree.com/images/128Agar%20Tum%20Saath%20Ho%20-%20Tamasha%20128%20Kbps.jpg",
+      thumbnail: "https://images.pexels.com/photos/73873/star-clusters-rosette-nebula-star-galaxies-73873.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
       musicUrl: "https://pagalfree.com/musics/128-Agar%20Tum%20Saath%20Ho%20-%20Tamasha%20128%20Kbps.mp3",
       duration: "5:30",
       artistName: "Arijit Singh, Alka Yagnik",
@@ -93,6 +93,7 @@ const songs = [
       duration: "3:35",
       artistName: "Tulsi Kumar, Akhil Sachdeva",
     },
+  
 
     
 ];

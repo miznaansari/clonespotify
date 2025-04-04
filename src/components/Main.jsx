@@ -26,13 +26,16 @@ const Main = () => {
     <>
 
 
-      <motion.div
-        className="h-[100dvh] md:pb-0 flex justify-around lg:justify-between"
-        animate={{
-          background: `linear-gradient(285deg, rgb(${dominantColor[0]}, ${dominantColor[1]}, ${dominantColor[2]}) 0%, rgb(65, 65, 65) 100%)`,
-        }}
-        transition={{ duration: 1.5, ease: "easeInOut" }} // Smooth transition
-      >
+<motion.div
+  className="h-[100dvh] md:pb-0 flex justify-around lg:justify-between"
+  animate={{
+    background: `linear-gradient(285deg, 
+      rgba(${dominantColor[0]}, ${dominantColor[1]}, ${dominantColor[2]}, 1) 0%, 
+      rgba(65, 65, 65, 1) 100%)`,
+  }}
+  transition={{ duration: 1.5, ease: "easeInOut" }}
+>
+
        
         {/* Desktop Navbar */}
         <div className="hidden lg:block">

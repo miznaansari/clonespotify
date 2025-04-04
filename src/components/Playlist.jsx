@@ -33,6 +33,7 @@ const Playlist = ({ setDominantColor, showCurrentPlay, setShowCurrentPlay }) => 
             try {
                 const colorThief = new ColorThief();
                 const color = colorThief.getColor(img);
+                console.log(color)
                 setDominantColor(color); // Update the background color in Main.jsx
             } catch (error) {
                 console.error("Color extraction failed:", error);
