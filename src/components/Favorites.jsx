@@ -4,6 +4,7 @@ import ColorThief from "colorthief";
 import { motion } from "framer-motion"; // Import framer-motion
 import { useLocation } from "react-router"; // To track location changes
 import { MdOutlineFavorite } from "react-icons/md";
+import { FaSpotify } from "react-icons/fa";
 const Favorites = ({ setDominantColor, showCurrentPlay, setShowCurrentPlay }) => {
     const [songs, setsong] = useState(
         JSON.parse(localStorage.getItem("FavSong")) || []
@@ -83,7 +84,12 @@ const Favorites = ({ setDominantColor, showCurrentPlay, setShowCurrentPlay }) =>
             <div className="md:hidden block w-full px-2 lg:px-5">
                 {!showCurrentPlay && (
                     <div className="w-full ">
-                        <h1 className="text-2xl text-white mt-8 font-bold mb-5">Recently Played</h1>
+                        <div className="flex items-center">
+                                                                         <FaSpotify className="text-2xl mr-3 text-white mt-8 font-bold mb-5" />
+                        <div className="flex items-center">
+                        <h1 className="text-2xl text-white mt-8 font-bold mb-5">Favorites</h1> <MdOutlineFavorite className="text-2xl  mt-8 ml-1 font-bold mb-5 text-red-500" />
+                        </div>
+                        </div>
                         {/* Search Bar */}
                         <input
                             type="text"

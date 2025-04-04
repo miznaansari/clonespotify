@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { IoIosPause } from "react-icons/io";
+import { motion } from "framer-motion";
 import { IoMdPlay } from "react-icons/io";
 import { FaBackward, FaForward, FaVolumeUp, FaVolumeMute } from "react-icons/fa";
 import { PiDotsThreeOutlineFill } from "react-icons/pi";
-
+import { FaHeart } from "react-icons/fa";
 const CurrentPlay = ({ song, audioRef, playNext, playPrevious }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -114,6 +115,14 @@ const CurrentPlay = ({ song, audioRef, playNext, playPrevious }) => {
     localStorage.setItem("FavSong", JSON.stringify(favSongs));
     setIsFavorite(!isFavorite);
   };
+  useEffect(() => {
+    if (!song) return;
+  
+    // Check if the song is already in favorites
+    const favSongs = JSON.parse(localStorage.getItem("FavSong")) || [];
+    const isFav = favSongs.some((fav) => fav.musicUrl === song.musicUrl);
+    setIsFavorite(isFav);
+  }, [song]);
 
   // Handle progress bar click
   const handleProgressClick = (e) => {
@@ -161,9 +170,9 @@ const CurrentPlay = ({ song, audioRef, playNext, playPrevious }) => {
             <PiDotsThreeOutlineFill size={24} />
           </button>
           {showMenu && (
-            <button onClick={toggleFavorite} className="absolute bg-black w-[200px] top-[-80px] left-0 p-2 rounded-sm">
-              <span className={`text-md  ${isFavorite ? "text-red-500" : "text-gray-500"}`}>
-                {isFavorite ? "❤️ Added" : "❤️ Add to Favorite"}
+            <button onClick={toggleFavorite} className="absolute  top-[-90px] left-0 p-2 rounded-sm">
+              <span >
+                {isFavorite ? (<><span><FaHeart className="text-4xl text-red-500" /></span></>): (<><span><FaHeart className=" text-4xl  text-white" /></span></>)}
               </span>
             </button>
           )}

@@ -4,6 +4,7 @@ import ColorThief from "colorthief";
 import songs from "../data/songs"; // Import your song data
 import { motion } from "framer-motion"; // Import framer-motion
 import { useLocation } from "react-router"; // To track location changes
+import { FaSpotify } from "react-icons/fa";
 
 const Playlist = ({ setDominantColor, showCurrentPlay, setShowCurrentPlay }) => {
     const [search, setSearch] = useState("");
@@ -80,7 +81,10 @@ const Playlist = ({ setDominantColor, showCurrentPlay, setShowCurrentPlay }) => 
             <div className="md:hidden block w-full px-2 lg:px-5">
                 {!showCurrentPlay && (
                     <div className="w-full ">
+                        <div className="flex items-center">
+                        <FaSpotify className="text-2xl mr-3 text-white mt-8 font-bold mb-5" />
                         <h1 className="text-2xl text-white mt-8 font-bold mb-5">For You</h1>
+                        </div>
                         {/* Search Bar */}
                         <input
                             type="text"
