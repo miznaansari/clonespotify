@@ -1,0 +1,52 @@
+const Playlist = ({ setCurrentSongIndex }) => {
+    const songs = [
+      {
+        title: "Naina",
+        thumbnail: "https://i.ytimg.com/vi/3u6lLWGjFLY/hqdefault.jpg",
+        musicUrl: "https://samplelib.com/lib/preview/mp3/sample-3s.mp3",
+        duration: "3:45",
+        artistName: "Diljit Dosanjh ft. Badshah",
+      },
+      {
+        title: "Sher Khul Gaye",
+        thumbnail: "https://i.ytimg.com/vi/eL2vQyP6DQE/hqdefault.jpg",
+        musicUrl: "https://samplelib.com/lib/preview/mp3/sample-6s.mp3",
+        duration: "4:10",
+        artistName: "Vishal-Shekhar, Benny Dayal, Shilpa Rao",
+      },
+      {
+        title: "Akhiyaan Gulaab",
+        thumbnail: "https://i.ytimg.com/vi/0qPoQiQIhgyMaP7X78hxri/hqdefault.jpg",
+        musicUrl: "https://samplelib.com/lib/preview/mp3/sample-9s.mp3",
+        duration: "3:55",
+        artistName: "Mitraz",
+      },
+      {
+        title: "Tauba Tauba",
+        thumbnail: "https://i.ytimg.com/vi/LK7-_dgAVQE/hqdefault.jpg",
+        musicUrl: "https://samplelib.com/lib/preview/mp3/sample-12s.mp3",
+        duration: "4:20",
+        artistName: "Karan Aujla",
+      },
+    ];
+  
+    return (
+      <div className="w-[400px]">
+        <h1 className="text-2xl font-bold mb-5">Bollywood Playlist</h1>
+        <ul>
+          {songs.map((song, index) => (
+            <li
+              key={index}
+              className="cursor-pointer hover:bg-gray-700 p-2 rounded-lg"
+              onClick={() => setCurrentSongIndex(index)}
+            >
+              {song.title}
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  };
+  
+  export default Playlist;
+  

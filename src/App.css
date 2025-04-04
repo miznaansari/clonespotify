@@ -1,0 +1,13 @@
+@import "tailwindcss";
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* Hide scrollbar for IE and Edge */
+  scrollbar-width: none;  /* Hide scrollbar for Firefox */
+}
+.animated-bg {
+  transition: background 1.5s ease-in-out;
+}

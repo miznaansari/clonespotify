@@ -1,0 +1,28 @@
+body {
+    background: linear-gradient(to right, #282c34, #3a3f47);
+    color: white;
+  }
+  
+  .player {
+    text-align: center;
+  }
+  
+  .controls button {
+    margin: 5px;
+  }
+  
+  .playlist ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .playlist li {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+  
+  .recent-list, .favorites {
+    margin-top: 20px;
+  }
+  
