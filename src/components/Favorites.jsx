@@ -100,46 +100,45 @@ const Favorites = ({ setDominantColor, showCurrentPlay, setShowCurrentPlay }) =>
                             />
                             <FaSearch className="text-gray-500 absolute top-3 text-xl right-5" />
                         </div>
-                        <div className="flex flex-2 gap-5 scrollbar-hide max-h-[70vh] overflow-y-auto p-1 justify-around text-white transition-all">
-                            <div className="w-full">
-                                <div className="rounded-sm scrollbar-hide overflow-y-auto">
-                                <AnimatePresence>
-                                {filteredSongs.length > 0 ? (
+                        <div className="relative w-full text-white">
+                            <div className="rounded-sm scrollbar-hide h-[70vh] overflow-y-auto">
+
+                                <div className="rounded-sm scrollbar-hide overflow-auto">
+                                    {filteredSongs.length > 0 ? (
                                         <ul className="space-y-4">
-                                        {filteredSongs.map((song, index) => (
-                                            <motion.li
-                                                key={song.id}
-                                                className={`flex items-center space-x-4 p-4 rounded-sm cursor-pointer hover:bg-[#ffffff20] ${currentSongId === song.id ? "bg-[#ffffff20]" : ""}`}
-                                                onClick={() => {
-                                                    setCurrentSongId(song.id); // Select the song
-                                                    setHasUserInteracted(true); // Mark as interacted
-                                                    toggleCurrentPlay?.(); // Toggle current play if applicable
-                                                }}
-                                                initial={{ opacity: 0, x: 50 }}
-                                                animate={{ opacity: 1, x: 0 }}
-                                                transition={{ duration: 0.4, delay: index * 0.1 }}
-                                            >
-                                                <img
-                                                    src={song.thumbnail}
-                                                    alt={song.title}
-                                                    className="w-12 h-12 rounded-full"
-                                                />
-                                                <div className="flex items-center justify-between w-full">
-                                                    <div>
-                                                        <h2 className="text-sm font-semibold">{song.title}</h2>
-                                                        <p className="text-xs text-gray-400">{song.artistName}</p>
+                                            {filteredSongs.map((song, index) => (
+                                                <motion.li
+                                                    key={song.id}
+                                                    className={`flex items-center space-x-4 p-4 rounded-sm cursor-pointer hover:bg-[#ffffff20] ${currentSongId === song.id ? "bg-[#ffffff20]" : ""}`}
+                                                    onClick={() => {
+                                                        setCurrentSongId(song.id); // Select the song
+                                                        setHasUserInteracted(true); // Mark as interacted
+                                                        toggleCurrentPlay?.(); // Toggle current play if applicable
+
+                                                    }}
+                                                    initial={{ opacity: 0, x: 50 }}
+                                                    animate={{ opacity: 1, x: 0 }}
+                                                    transition={{ duration: 0.4, delay: index * 0.1 }}
+                                                >
+                                                    <img
+                                                        src={song.thumbnail}
+                                                        alt={song.title}
+                                                        className="w-12 h-12 rounded-full"
+                                                    />
+                                                    <div className="flex items-center justify-between w-full">
+                                                        <div>
+                                                            <h2 className="text-sm font-semibold">{song.title}</h2>
+                                                            <p className="text-xs text-gray-400">{song.artistName}</p>
+                                                        </div>
+                                                        <p className="text-xs text-gray-400">{song.duration}</p>
                                                     </div>
-                                                    <p className="text-xs text-gray-400">{song.duration}</p>
-                                                </div>
-                                            </motion.li>
-                                        ))}
-                                    </ul>
-                                    
+                                                </motion.li>
+                                            ))}
+                                        </ul>
+
                                     ) : (
                                         <p className="text-center text-gray-400">No results found</p>
                                     )}
-
-                                    </AnimatePresence>
                                 </div>
                             </div>
                         </div>
@@ -173,9 +172,10 @@ const Favorites = ({ setDominantColor, showCurrentPlay, setShowCurrentPlay }) =>
                         />
                         <FaSearch className="text-gray-500 absolute top-3 text-xl right-5" />
                     </div>
-                    <div className="flex gap-5 scrollbar-hide max-h-[75dvh] overflow-y-auto p-1 justify-around text-white transition-all">
-                        <div className="w-full">
-                            <div className="rounded-sm scrollbar-hide overflow-y-auto">
+                    <div className="relative w-full text-white">
+                        <div className="rounded-sm scrollbar-hide h-[70vh] overflow-y-auto">
+
+                            <div className="rounded-sm scrollbar-hide overflow-auto">
                                 {filteredSongs.length > 0 ? (
                                     <ul className="space-y-4">
                                         {filteredSongs.map((song, index) => (

@@ -64,7 +64,7 @@ const Main = () => {
         {/* Mobile View Toggle Button */}
         <button
           onClick={toggleCurrentPlay}
-          className="lg:hidden fixed top-8 left-2 text-white p-2 rounded-full"
+          className="md:hidden fixed top-8 left-2 text-white p-2 rounded-full"
         >
           {showCurrentPlay && (
             <div className="flex gap-2 items-center">
