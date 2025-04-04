@@ -46,9 +46,9 @@ const Main = () => {
         </div>
         
         {isNavbarVisible?(<> {/* Mobile Menu Icon */}
-       <RxCross2 className="text-3xl mt-8 m-3 block lg:hidden text-white fixed top-0 right-0 z-50"
+       <RxCross2 className="text-3xl mt-9 m-3 block lg:hidden text-white fixed top-0 right-0 z-50"
           onClick={toggleNavbar}/></>):(<> <IoMdMenu
-            className="text-3xl mt-8 m-3 block lg:hidden text-white fixed top-0 right-0 z-50"
+            className="text-3xl mt-9 m-3 block lg:hidden text-white fixed top-0 right-0 z-50"
             onClick={toggleNavbar}
           /></>)}
 
@@ -75,7 +75,7 @@ const Main = () => {
         {/* Mobile View Toggle Button */}
         <button
           onClick={toggleCurrentPlay}
-          className="md:hidden fixed top-8 left-2 text-white p-2 rounded-full"
+          className="md:hidden fixed top-7   left-2 text-white p-2 rounded-full"
         >
           {showCurrentPlay && (
             <div className="flex gap-2 items-center">
