@@ -6,7 +6,7 @@ import { FaBackward, FaForward, FaVolumeUp, FaVolumeMute, FaHeart } from "react-
 import { PiDotsThreeOutlineFill } from "react-icons/pi";
 import songContext from "../context/songContext";
 
-const CurrentPlay = ({ showCurrentPlay, hasUserInteracted }) => {
+const CurrentPlay = ({ showCurrentPlay, hasUserInteracted,setShowCurrentPlay }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const [volume, setVolume] = useState(1);
@@ -93,9 +93,8 @@ const CurrentPlay = ({ showCurrentPlay, hasUserInteracted }) => {
   const toggleVolumeSlider = () => {
     setShowVolumeSlider(!showVolumeSlider);
     setTimeout(() => {
-      console.log('object')
-      setShowVolumeSlider(showVolumeSlider);
-    }, 3000)
+      setShowVolumeSlider(false);
+    }, 3000);
   };
 
   const handleVolumeChange = (e) => {
@@ -178,7 +177,12 @@ const CurrentPlay = ({ showCurrentPlay, hasUserInteracted }) => {
   return (
 
     <>
-      <div className={`p-2 pb-0 mt-20 md:pb-0 lg:p-5 rounded-sm mx-2 lg:mx-10 text-white mt-16 md:mt-0 relative md:block ${showCurrentPlay ? "" : "hidden"}`}>
+     <motion.div
+  initial={{ y: 100, opacity: 0 }}
+  animate={{ y: 0, opacity: 1 }}
+  transition={{ duration: 0.6, ease: "easeInOut" }}
+  className={`p-2 pb-0 mt-20 md:pb-0 lg:p-5 rounded-sm mx-2 lg:mx-10 text-white mt-16 md:mt-0 relative md:block ${showCurrentPlay ? "" : "hidden"}`}
+>
         <h2 className="text-xl font-bold mt-3 mb-2">{currentSong.title}</h2>
         <p className="text-gray-400 mb-2 md:mb-8">{currentSong.artistName}</p>
         <img
@@ -279,7 +283,7 @@ const CurrentPlay = ({ showCurrentPlay, hasUserInteracted }) => {
           )}
         </div>
 
-      </div>
+        </motion.div>
      
   <div className={`fixed bottom-0 left-0 w-full h-[60px] bg-[#111] text-white flex items-center justify-between px-4 z-50 md:hidden ${showCurrentPlay ? "hidden" : ""}`}>
     <div className="flex items-center gap-3">
@@ -288,7 +292,7 @@ const CurrentPlay = ({ showCurrentPlay, hasUserInteracted }) => {
         alt={currentSong.title}
         className="w-[50px] h-[50px] object-cover rounded"
       />
-      <div>
+      <div  onClick={()=>setShowCurrentPlay(true)}>
         <h4 className="text-sm font-semibold truncate max-w-[150px]">{currentSong.title}</h4>
         <p className="text-xs text-gray-400 truncate max-w-[150px]">{currentSong.artistName}</p>
       </div>

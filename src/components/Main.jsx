@@ -149,6 +149,7 @@ console.log(hasUserInteracted+"user intracted")
         {/* <div className={`w-full md:w-2/3 ${showCurrentPlay ? "" : "block"} `}> */}
         {currentSong && (
           <CurrentPlay
+          setShowCurrentPlay={setShowCurrentPlay}
           showCurrentPlay={showCurrentPlay}
             audioRef={audioRef}
             playNext={playNext}
