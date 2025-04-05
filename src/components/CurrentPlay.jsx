@@ -17,7 +17,7 @@ const CurrentPlay = ({    showCurrentPlay,hasUserInteracted}) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const context = useContext(songContext);
-  const { currentSong, audioRef, playNext, playPrevious } = useContext(songContext);
+  const { currentSong, audioRef, playNext, playPrevious,setfavsongs } = useContext(songContext);
 
 
 
@@ -110,20 +110,37 @@ const CurrentPlay = ({    showCurrentPlay,hasUserInteracted}) => {
       setVolume(prevVolume);
     }
   };
-
   const toggleFavorite = () => {
     let favSongs = JSON.parse(localStorage.getItem("FavSong")) || [];
+  
+    const alreadyExists = favSongs.some(
+      (fav) => fav.musicUrl === currentSong.musicUrl
+    );
+  
     if (isFavorite) {
-      favSongs = favSongs.filter((fav) => fav.musicUrl !== currentSong.musicUrl);
+      // User is unliking the song
+      const updatedFavs = favSongs.filter(
+        (fav) => fav.musicUrl !== currentSong.musicUrl
+      );
+      localStorage.setItem("FavSong", JSON.stringify(updatedFavs));
+      setfavsongs(updatedFavs);
     } else {
-      favSongs.push(currentSong);
-      if (navigator.vibrate) {
-        navigator.vibrate(200);
+      // User is liking the song (only add if not already in list)
+      if (!alreadyExists) {
+        favSongs.push(currentSong);
+        localStorage.setItem("FavSong", JSON.stringify(favSongs));
+        setfavsongs(favSongs);
+  
+        // Optional vibration
+        if (navigator.vibrate) {
+          navigator.vibrate(200);
+        }
       }
     }
-    localStorage.setItem("FavSong", JSON.stringify(favSongs));
+  
     setIsFavorite(!isFavorite);
   };
+  
 
   useEffect(() => {
     const audio = audioRef.current;

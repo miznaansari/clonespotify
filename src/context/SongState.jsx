@@ -16,15 +16,13 @@ const SongState = ({ children }) => {
   useEffect(() => {
     if (nav === '/') {
         setsongss(songss);
-    } else if (nav === '/favorites') {
-        setsongss(JSON.parse(localStorage.getItem("FavSong")) || []);
-    } else if (nav === '/recently-played') {
+    }else if (nav === '/recently-played') {
         setsongss(JSON.parse(sessionStorage.getItem("RecentlyPlayed")) || []);
     } else if (nav === '/top-tracks') {
         setsongss(JSON.parse(localStorage.getItem("TopPlayed")) || []);
     }
 }, [nav]);
-
+const [favsong, setfavsongs] = useState((JSON.parse(localStorage.getItem("FavSong")) || []))
 
     const handleaudio = (allSongs) => {
         const song = allSongs.find((s) => s.id === currentSongId);
@@ -53,6 +51,8 @@ const SongState = ({ children }) => {
         <songContext.Provider
             value={{
                 setnav,
+                favsong,
+                setfavsongs,
                 nav,
                 songs,
                 currentSongId,

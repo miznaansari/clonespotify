@@ -1,8 +1,14 @@
-import React from "react";
+import React, { useContext } from "react";
 import { FaSpotify } from "react-icons/fa";
 import { NavLink } from "react-router"; // Make sure to import from 'react-router-dom' for React Router v6
 import imgSpotify from "./spotify.png";
+import songContext from "../context/songContext";
 const Navbar = ({ closeNavbar }) => {
+
+  const {
+    setnav,
+   
+} = useContext(songContext);
   return (
     <nav className="w-60 flex-col p-4 text-white">
       {/* Logo Section */}
@@ -34,10 +40,15 @@ const Navbar = ({ closeNavbar }) => {
         </NavLink>
         <NavLink 
           to="/favorites" 
+          
           className={({ isActive }) => 
             `text-left px-4 py-2 rounded-sm transition-all duration-300 
               ${isActive ? "text-white  " : "text-[#ffffff70]"}`}
-          onClick={closeNavbar}  // Close navbar on click
+              onClick={() => {
+                closeNavbar();
+                setnav('/favorites');
+              }}
+              
         >
           Favorites
         </NavLink>

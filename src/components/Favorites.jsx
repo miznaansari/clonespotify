@@ -11,7 +11,7 @@ const Favorites = ({ setDominantColor, showCurrentPlay, setShowCurrentPlay }) =>
     const [search, setSearch] = useState("");
 
     const {
-        songs,
+        favsong,
         setnav,
         currentSongId,
         setCurrentSongId,
@@ -20,10 +20,9 @@ const Favorites = ({ setDominantColor, showCurrentPlay, setShowCurrentPlay }) =>
         hasUserInteracted,
         setHasUserInteracted,
     } = useContext(songContext);
-    setnav('/favorites')
     
 
-    const filteredSongs = songs.filter((song) =>
+    const filteredSongs = favsong.filter((song) =>
         song.title.toLowerCase().includes(search.toLowerCase())
     );
 
@@ -43,14 +42,14 @@ const Favorites = ({ setDominantColor, showCurrentPlay, setShowCurrentPlay }) =>
     }, [currentSong]);
 
     const playNext = () => {
-        const nextIndex = (songs.findIndex(song => song.id === currentSongId) + 1) % songs.length;
-        setCurrentSongId(songs[nextIndex].id);
+        const nextIndex = (favsong.findIndex(song => song.id === currentSongId) + 1) % favsong.length;
+        setCurrentSongId(favsong[nextIndex].id);
         setHasUserInteracted(true);
     };
     const toggleView = () => setShowCurrentPlay(prev => !prev);
     const playPrevious = () => {
-        const prevIndex = (songs.findIndex(song => song.id === currentSongId) - 1 + songs.length) % songs.length;
-        setCurrentSongId(songs[prevIndex].id);
+        const prevIndex = (favsong.findIndex(song => song.id === currentSongId) - 1 + favsong.length) % favsong.length;
+        setCurrentSongId(favsong[prevIndex].id);
         setHasUserInteracted(true);
     };
 
