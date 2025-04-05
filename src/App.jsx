@@ -4,14 +4,17 @@ import viteLogo from '/vite.svg'
 import './App.css'
 import Main from './components/Main'
 import Playlist from './components/Playlist'
+import SongState from './context/SongState'
 
 function App() {
   const [count, setCount] = useState(0)
 
   return (
     <>
+    <SongState>
     
     <Main />
+    </SongState>
     </>
   )
 }

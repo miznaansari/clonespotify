@@ -1,11 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { IoIosPause } from "react-icons/io";
 import { motion } from "framer-motion";
 import { IoMdPlay } from "react-icons/io";
 import { FaBackward, FaForward, FaVolumeUp, FaVolumeMute, FaHeart } from "react-icons/fa";
 import { PiDotsThreeOutlineFill } from "react-icons/pi";
+import songContext from "../context/songContext";
 
-const CurrentPlay = ({ song, audioRef, playNext, playPrevious }) => {
+const CurrentPlay = ({    showCurrentPlay,hasUserInteracted}) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const [volume, setVolume] = useState(1);
@@ -15,27 +16,33 @@ const CurrentPlay = ({ song, audioRef, playNext, playPrevious }) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  if (!song) return null;
+  const context = useContext(songContext);
+  const { currentSong, audioRef, playNext, playPrevious } = useContext(songContext);
+
+
+
+  if (!currentSong) return null;
+  // console.log(currentSong)
+  
 
   useEffect(() => {
-    if (!song) return;
-
+    // if (!currentSong) return;
     const recentlyPlayed = JSON.parse(sessionStorage.getItem("RecentlyPlayed")) || [];
-    const updatedRecentlyPlayed = recentlyPlayed.filter((s) => s.id !== song.id);
-    updatedRecentlyPlayed.unshift(song);
+    const updatedRecentlyPlayed = recentlyPlayed.filter((s) => s.id !== currentSong.id);
+    updatedRecentlyPlayed.unshift(currentSong);
     sessionStorage.setItem("RecentlyPlayed", JSON.stringify(updatedRecentlyPlayed));
 
     let topPlayed = JSON.parse(localStorage.getItem("TopPlayed")) || [];
-    const existingSongIndex = topPlayed.findIndex((s) => s.id === song.id);
+    const existingSongIndex = topPlayed.findIndex((s) => s.id === currentSong.id);
     if (existingSongIndex >= 0) {
       topPlayed[existingSongIndex].playCount += 1;
     } else {
-      song.playCount = 1;
-      topPlayed.push(song);
+      currentSong.playCount = 1;
+      topPlayed.push(currentSong);
     }
     topPlayed = topPlayed.sort((a, b) => b.playCount - a.playCount);
     localStorage.setItem("TopPlayed", JSON.stringify(topPlayed));
-  }, [song]);
+  }, [currentSong?.id]);
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -60,9 +67,9 @@ const CurrentPlay = ({ song, audioRef, playNext, playPrevious }) => {
     };
   }, [audioRef]);
 
-  useEffect(() => {
-    setProgress(0);
-  }, [song]);
+  // useEffect(() => {
+  //   setProgress(0);
+  // }, [song]);
 
   useEffect(() => {
     if (audioRef.current) {
@@ -107,9 +114,9 @@ const CurrentPlay = ({ song, audioRef, playNext, playPrevious }) => {
   const toggleFavorite = () => {
     let favSongs = JSON.parse(localStorage.getItem("FavSong")) || [];
     if (isFavorite) {
-      favSongs = favSongs.filter((fav) => fav.musicUrl !== song.musicUrl);
+      favSongs = favSongs.filter((fav) => fav.musicUrl !== currentSong.musicUrl);
     } else {
-      favSongs.push(song);
+      favSongs.push(currentSong);
       if (navigator.vibrate) {
         navigator.vibrate(200);
       }
@@ -119,10 +126,21 @@ const CurrentPlay = ({ song, audioRef, playNext, playPrevious }) => {
   };
 
   useEffect(() => {
-    if (!song) return;
+    const audio = audioRef.current;
+    if (!audio || !currentSong?.musicUrl) return;
+  
+    audio.src = currentSong.musicUrl;
+    audio.play()
+      .then(() => setIsPlaying(true))
+      .catch(err => console.error("Play error", err));
+  }, [currentSong.id]); // Automatically plays when song changes
+  
+
+  useEffect(() => {
+    if (!currentSong) return;
     const favSongs = JSON.parse(localStorage.getItem("FavSong")) || [];
-    setIsFavorite(favSongs.some((fav) => fav.musicUrl === song.musicUrl));
-  }, [song]);
+    setIsFavorite(favSongs.some((fav) => fav.musicUrl === currentSong.musicUrl));
+  }, [currentSong]);
 
   const handleProgressClick = (e) => {
     const audio = audioRef.current;
@@ -136,14 +154,13 @@ const CurrentPlay = ({ song, audioRef, playNext, playPrevious }) => {
     setProgress(newProgress);
     audio.currentTime = (newProgress / 100) * audio.duration;
   };
-
   return (
-    <div className="p-2 pb-0 mt-20 md:pb-0 lg:p-5 rounded-sm mx-2 lg:mx-10 text-white mt-16 md:mt-0 md:block relative">
-      <h2 className="text-xl font-bold mt-3 mb-2">{song.title}</h2>
-      <p className="text-gray-400 mb-2 md:mb-8">{song.artistName}</p>
+    <div className={`p-2 pb-0 mt-20 md:pb-0 lg:p-5 rounded-sm mx-2 lg:mx-10 text-white mt-16 md:mt-0 relative md:block ${showCurrentPlay?"":"hidden"}`}>
+      <h2 className="text-xl font-bold mt-3 mb-2">{currentSong.title}</h2>
+      <p className="text-gray-400 mb-2 md:mb-8">{currentSong.artistName}</p>
       <img
-        src={song.thumbnail}
-        alt={song.title}
+        src={currentSong.thumbnail}
+        alt={currentSong.title}
         className="aspect-square object-fit h-88 rounded-lg mx-auto cursor-pointer"
       />
 
@@ -153,7 +170,7 @@ const CurrentPlay = ({ song, audioRef, playNext, playPrevious }) => {
 
       <audio
         ref={audioRef}
-        src={song.musicUrl}
+        src={currentSong.musicUrl}
         onEnded={playNext}
         onLoadStart={() => setIsLoading(true)}
         onLoadedData={() => setIsLoading(false)}

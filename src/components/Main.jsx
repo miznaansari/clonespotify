@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion"; // Import AnimatePresence
 import { Routes, Route, useLocation } from "react-router"; // Fix import path
 import Playlist from "./Playlist";
@@ -11,16 +11,31 @@ import Navbar from "./Navbar";
 import { IoMdMenu } from "react-icons/io";
 import { FaList, FaSpotify } from "react-icons/fa";
 import imgSpotify from "./spotify.png";
+import songContext from "../context/songContext";
+import CurrentPlay from "./CurrentPlay";
 const Main = () => {
   const [dominantColor, setDominantColor] = useState([21, 26, 35]); // Default dark gray
   const [isNavbarVisible, setIsNavbarVisible] = useState(false);
-  const [showCurrentPlay, setShowCurrentPlay] = useState(false);
+  // const [showCurrentPlay, setShowCurrentPlay] = useState(false);
+  // console.log(showCurrentPlay)
 
   const toggleNavbar = () => setIsNavbarVisible(!isNavbarVisible);
   const closeNavbar = () => setIsNavbarVisible(false);
   const toggleCurrentPlay = () => setShowCurrentPlay(!showCurrentPlay);
   const location = useLocation(); // Track route changes
 
+  const {
+    currentSongId,
+    setCurrentSongId,
+    showCurrentPlay,setShowCurrentPlay,
+    currentSong,
+    audioRef,
+    hasUserInteracted,
+    setHasUserInteracted,
+    playNext,
+    playPrevious
+} = useContext(songContext);
+console.log(hasUserInteracted+"user intracted")
   useEffect(() => {
     setShowCurrentPlay(false); // Hide CurrentPlay when the route changes
   }, [location.pathname]);
@@ -131,6 +146,16 @@ const Main = () => {
             }
           />
         </Routes>
+        {/* <div className={`w-full md:w-2/3 ${showCurrentPlay ? "" : "block"} `}> */}
+        {currentSong && (
+          <CurrentPlay
+          showCurrentPlay={showCurrentPlay}
+            audioRef={audioRef}
+            playNext={playNext}
+            playPrevious={playPrevious}
+          />
+        )}
+        {/* </div> */}
 
       </motion.div>
      <div className="fixed bottom-5 left-10 hidden lg:block"> <img src="https://s3-alpha-sig.figma.com/img/4b1c/9272/23674d7d0fc7e5938c32787f13738353?Expires=1744588800&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=mc1whtZ6W7czkdFWDVB1JAlBUmwrC3GffOZXhrkfPhnfMMrwE28nyBB7E4F-JIFXY5GYIYTlY1w5ZBN6C7IiYzEu6HhuojfwfH7XwamRlk-GApiKC1eiPpsUiJwPvSdEhW3bmmFYcqq1hTDUVxHMYWZzW4RBwzd6Ri3IOGtALknSwUr4n~k~VPUZ5b5dXgN4786HDmS9L83PfyZCs-fcKuEFxAWudE45iqtVD5cRum92tW71oXha~Nnfrx1~UGAFU~pMF0lZH0QpNSjK4RHkQyt937FDGAd1M1WJ55dowFzcq5Cj5OFCL-4zG~LNsp~pFx3GPktr3oABs404poW2Fg__" 
